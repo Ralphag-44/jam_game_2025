@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Balance Tetris</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      overflow: hidden;
+    }
+    body {
+      background-color: #444444;
+    }
+  </style>
+  <body>
+    <canvas id="canvas"></canvas>
+    <script src="pieces.js"></script>
+    <script src="balance.js"></script>
+    <script>
+      let FPS = 30;
+      let Tx = 0;
+      let keys = [];
+      keys[68] = false;
+      keys[39] = false;
+      let canvas = document.getElementById("canvas");
+      let context = canvas.getContext("2d");
+      canvas.height = innerHeight;
+      canvas.width = (innerHeight * 125) / 200;
+      let timer = setInterval(loop, 1000 / FPS);
+      let gravity = 0.3269;
+      let pieces = [];
+      squareP = Math.ceil(canvas.width / 20);
+      let balance = new Balance();
+      pieces.push(new Piece(0));
+      // pieces.push(new Piece(0));
+      function loop() {
+        context.fillStyle = "gray";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        //context.strokeStyle = "white";
+        // context.beginPath();
+        // for (let i = 0; i < 20; i++) {
+        //   context.moveTo(Math.ceil(canvas.width / 20) * i, 0);
+        //   context.font = "12px serif";
+        //   context.strokeText(i, Math.ceil(canvas.width / 20) * i + 2, 100);
+        //   context.lineTo(Math.ceil(canvas.width / 20) * i, canvas.height);
+        // }
+        // context.closePath();
+        // context.stroke();
+        for (let i = 0; i < pieces.length; i++) {
+          pieces[i].update();
+          pieces[i].draw();
+        }
+        movs();
+        context.strokeStyle = "black";
+        context.beginPath();
+        for(let i = 0; (i < canvas.height); i+=squareP)
+        {   context.moveTo(0, i);
+            context.lineTo(canvas.width, i);
+        }
+        for(let i = 0; (i < canvas.width); i+=squareP)
+        {   context.moveTo(i, 0);
+            context.lineTo(i, canvas.height);
+        }
+        context.closePath();
+        
+        context.stroke();
+        balance.draw();
+        balance.update();
+      }
+      let movTimer = 0;
+      function movs() {
+        movTimer += movTimer < 4;
+        if (movTimer == 4) {
+          if ((keys[65] || keys[37]) && pieces[pieces.length - 1].x > 0)
+          { pieces[pieces.length - 1].translate(-squareP, 0);
+            movTimer = 0;
+            console.log(pieces[pieces.length - 1].x)
+          } 
+          else 
+          { if ((keys[68] || keys[39]) && pieces[pieces.length - 1].x + pieces[pieces.length - 1].width < canvas.width) 
+            {   pieces[pieces.length - 1].translate(squareP, 0);
+                movTimer = 0;
+            }
+          }
+          if (keys[83] || keys[40])
+          { pieces[pieces.length - 1].translate(0, squareP);
+          }
+        }   
+      }
+      document.addEventListener("keydown", keyD);
+      document.addEventListener("keyup", keyU);
+      function keyD(event)
+      { keys[event.keyCode] = true;
+        //console.log(event.keyCode)
+      }
+      function keyU(event)
+      { keys[event.keyCode] = false;
+      }
+    //   document.addEventListener("mousemove", moved);
+    //   function moved(event) {
+    //     Tx = event.clientX;
+    //   }
+    </script>
+  </body>
+</html>
