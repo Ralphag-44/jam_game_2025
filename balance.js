@@ -43,6 +43,9 @@ class Balance
             {   this.angle = 0;
             }
         }
+        if(Math.abs(this.angle) > 35)
+        {   window.location.reload();
+        }
     }
 
     centerMass() {
@@ -51,11 +54,7 @@ class Balance
         for (let i = 0; i < pieces.length; i++) {
             if(pieces[i].state)
             {   let distance = Math.ceil((pieces[i].x + pieces[i].width/2) / (canvas.width / 20)) - 11;
-                let totalMass = 0;
-                for (let i2 = 0; i2 < pieces[i].list.length; i2++) {
-                    totalMass += pieces[i].list[i2].mass;
-                }
-                this.torqueTotal += totalMass * gravity * distance;
+                this.torqueTotal += pieces[i].mass * gravity * distance;
             }
         }
         this.massCenter = this.torqueTotal;
