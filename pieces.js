@@ -3,13 +3,15 @@ class Point
 {	constructor(x, y)
 	{	this.x = x;
 		this.y = y;
+        this.angle = 0;
 	}
 	translate(dx, dy)
 	{	this.x += dx;
 		this.y += dy;
 	}
 	rotate(angle)
-	{	angle *= Math.PI/180;
+	{	this.angle += angle;
+        angle *= Math.PI/180;
 		let x = Math.cos(angle)*this.x-Math.sin(angle)*this.y;
 		let y = Math.sin(angle)*this.x+Math.cos(angle)*this.y;
 		this.x = x;
